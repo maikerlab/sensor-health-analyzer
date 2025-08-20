@@ -1,0 +1,13 @@
+# IDE
+.idea/
+
+# build
+target/
+
+# logs etc.
+mosquitto/data
+mosquitto/log
+
+# secrets
+.env
+.envrc

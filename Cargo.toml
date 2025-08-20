@@ -1,0 +1,8 @@
+[workspace]
+resolver = "3"
+members = [
+    "common",
+    "dispatcher",
+    "mqtt_worker",
+    "sensor_store"
+]

@@ -1,0 +1,2 @@
+[env]
+DATABASE_URL = "postgres://iot:sensor@localhost/sensor_db"
