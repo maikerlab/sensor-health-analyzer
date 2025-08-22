@@ -48,6 +48,7 @@ fn handle_send_loop(mqtt_client: &Client, connection: &mut Connection, sensor_ty
         mqtt_client.publish(topic, QoS::AtLeastOnce, true, payload.as_bytes())
             .expect("error publishing message");
         connection.iter().take(3).for_each(drop);
+        std::thread::sleep(Duration::from_secs(1));
     }
 }
 
