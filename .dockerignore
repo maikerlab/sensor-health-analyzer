@@ -1,0 +1,16 @@
+#-- FOLDERS:
+.idea/
+.vscode/
+.cargo/
+target/
+docs/
+mosquitto/
+
+#-- FILES:
+.env
+.envrc
+.gitignore
+settings.toml
+docker-compose.yml
+build_docker.sh
+README.md

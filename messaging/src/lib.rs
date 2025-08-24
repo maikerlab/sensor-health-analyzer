@@ -4,11 +4,13 @@ use async_nats::jetstream::consumer::pull::Config;
 use async_nats::jetstream::Context;
 use common::settings::Settings;
 use anyhow::Result;
+use tracing::{info};
 
 pub async fn connect_nats() -> Result<Context> {
-    let settings = Settings::load();
-    println!("Connecting to NATS at {}", settings.nats_url);
-    let client = async_nats::connect(settings.nats_url).await?;
+    let nats_url = Settings::load()
+        .get_nats_url_or_default();
+    info!("Connecting to NATS at {}", nats_url);
+    let client = async_nats::connect(nats_url).await?;
     let jet_stream = jetstream::new(client);
     Ok(jet_stream)
 }

@@ -4,6 +4,7 @@ use rumqttc::{Client, Connection, MqttOptions, QoS};
 use tracing::{debug, info};
 use common::settings::Settings;
 use anyhow::Result;
+use rand::prelude::IndexedRandom;
 use rand::Rng;
 
 #[derive(Parser, Debug)]
@@ -26,7 +27,7 @@ enum Commands {
     },
     /// sends measurements in an endless loop
     Loop {
-        sensor_type: String,
+        sensor_type: Option<String>,
     }
 }
 
@@ -37,11 +38,23 @@ fn handle_send_msg(mqtt_client: &Client, connection: &mut Connection, topic: &st
     connection.iter().take(3).for_each(drop);
 }
 
-fn handle_send_loop(mqtt_client: &Client, connection: &mut Connection, sensor_type: &str) {
-    let mut rng = rand::rng();
+fn handle_send_loop(mqtt_client: &Client, connection: &mut Connection, sensor_type: Option<String>) {
+    let available_types = vec!["temp", "humidity"];
     loop {
-        let sensor_id: i32 = rng.random_range(1..10);
-        let value: f64 = rng.random_range(10.0..35.0);
+        let mut rng = rand::rng();
+        let sensor_type = match &sensor_type {
+            None => {
+                available_types.choose(&mut rand::rng()).unwrap()
+            }
+            Some(st) => {
+                st.as_str()
+            }
+        };
+        let (sensor_id, value) = match sensor_type {
+            "temp" => (rng.random_range(1..5), rng.random_range(-20.0..50.0)),
+            "humidity" => (rng.random_range(6..10), rng.random_range(0.0..100.0)),
+            _ => (1, 0.0),
+        };
         let topic = format!("sensors/{}/{}", sensor_type, sensor_id);
         let payload = format!("{:.1}", value);
         info!("Publish to {} -> {}", topic, payload);
@@ -74,7 +87,7 @@ fn main() -> Result<()> {
             }
         }
         Some(Commands::Loop { sensor_type }) => {
-            handle_send_loop(&client, &mut connection, sensor_type.as_str());
+            handle_send_loop(&client, &mut connection, sensor_type.clone());
         }
         None => {},
     }

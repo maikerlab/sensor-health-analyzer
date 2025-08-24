@@ -1,20 +1,22 @@
 use common::SenMLRecord;
 use futures::StreamExt;
 use db::data::save_record;
-use tracing::info;
+use tracing::{error, info};
 use anyhow::Result;
+
+const STREAM_NAME_TEMPERATURE: &str = "TEMPERATURE_SENSOR_EVENTS";
 
 #[tokio::main]
 async fn main() -> Result<()> {
     // init logging
     tracing_subscriber::fmt::init();
 
-    let db = db::connect_postgres().await.expect("cannot connect to database");
-    let nats = messaging::connect_nats().await.expect("cannot connect to NATS JetStream");
+    let db = db::connect_postgres().await?;
+    let nats = messaging::connect_nats().await?;
 
-    let stream_name = String::from("TEMPERATURE_SENSOR_EVENTS");
+    let stream_name = String::from(STREAM_NAME_TEMPERATURE);
     let subjects = vec!["temp.>".into()];
-    let consumer = messaging::subscribe(&nats, stream_name, subjects).await.expect("cannot subscribe to NATS JetStream");
+    let consumer = messaging::subscribe(&nats, stream_name, subjects).await?;
     // Attach to the messages iterator for the Consumer.
     let mut messages = consumer.messages().await?;
 
@@ -31,10 +33,11 @@ async fn main() -> Result<()> {
         let record: SenMLRecord = serde_cbor::from_slice(&message.payload)
             .or_else(|_| serde_json::from_slice(&message.payload))
             .expect("error at CBOR or JSON deserialization");
-        info!("Received SenMLRecord: {}", record);
 
-        save_record(&db, record, sensor_id).await.expect("error while saving sensor data");
-        info!("saved sensor data");
+        match save_record(&db, record.clone(), sensor_id).await {
+            Ok(_) => info!("Saved sensor_data: {}", record),
+            Err(e) => error!("Error saving sensor_data: {}", e),
+        }
 
         // acknowledge the message
         message.ack().await.map_err(|e| anyhow::anyhow!(e))?;

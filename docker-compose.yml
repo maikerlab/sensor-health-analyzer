@@ -18,10 +18,13 @@ services:
       - PGDATA=/pgdata
       - POSTGRES_USER=iot
       - POSTGRES_PASSWORD=sensor
+      - POSTGRES_DB=sensor_db
     ports:
       - "5432:5432"
     volumes:
       - pg_data:/pgdata
+    networks:
+      - iot_network
 
   grafana:
     image: grafana/grafana
@@ -42,6 +45,35 @@ services:
     networks:
       - iot_network
 
+  mqtt_worker:
+    build:
+      context: .
+      dockerfile: mqtt_worker/Dockerfile
+    environment:
+      - IOT_NATS_URL=nats://nats:4222
+      - IOT_MQTT_HOST=mqtt_broker
+      - IOT_MQTT_PORT=1883
+      - RUST_LOG=debug
+    depends_on:
+      - mqtt_broker
+      - nats
+    networks:
+      - iot_network
+
+  dispatcher:
+    build:
+      context: .
+      dockerfile: dispatcher/Dockerfile
+    environment:
+      - IOT_NATS_URL=nats://nats:4222
+      - IOT_DATABASE_URL=postgres://iot:sensor@db/sensor_db
+      - RUST_LOG=debug
+    depends_on:
+      - db
+      - nats
+    networks:
+      - iot_network
+
 volumes:
   nats_data:
   pg_data:
@@ -49,4 +81,3 @@ volumes:
 
 networks:
   iot_network:
-    driver: bridge

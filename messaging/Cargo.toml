@@ -7,3 +7,4 @@ edition = "2024"
 async-nats = "0.42.0"
 common = { path = "../common" }
 anyhow.workspace = true
+tracing.workspace = true

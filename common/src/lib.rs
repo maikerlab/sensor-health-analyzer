@@ -3,7 +3,7 @@ pub mod settings;
 use std::fmt::{Display, Formatter};
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct SenMLRecord {
     #[serde(rename = "n")]
     pub name: String,
