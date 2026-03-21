@@ -1,2 +1,1 @@
-docker build -f mqtt_worker/Dockerfile -t iot-gateway/mqtt_worker .
-docker build -f dispatcher/Dockerfile -t iot-gateway/dispatcher .
+docker build -f collector/Dockerfile -t iot-gateway/collector .

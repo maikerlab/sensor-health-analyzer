@@ -1,17 +1,5 @@
 services:
 
-  nats:
-    image: nats:latest
-    command: ["-js", "-sd", "/data", "-DV"]
-    volumes:
-      - nats_data:/data
-    ports:
-      - "4222:4222"
-      - "6222:6222"
-      - "8222:8222"
-    networks:
-      - iot_network
-
   db:
     image: timescale/timescaledb:latest-pg17
     environment:
@@ -32,7 +20,7 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - grafana_storage:/var/lib/grafana/grafana.db
+      - grafana_storage:/var/lib/grafana
     networks:
       - iot_network
 
@@ -47,37 +35,20 @@ services:
     networks:
       - iot_network
 
-  mqtt_worker:
+  collector:
     build:
       context: .
-      dockerfile: mqtt_worker/Dockerfile
+      dockerfile: collector/Dockerfile
     environment:
-      - IOT_NATS_URL=nats://nats:4222
-      - IOT_MQTT_HOST=mqtt_broker
-      - IOT_MQTT_PORT=1883
+      - SHM_MQTT_HOST=mqtt_broker
+      - SHM_MQTT_PORT=1883
       - RUST_LOG=debug
     depends_on:
       - mqtt_broker
-      - nats
-    networks:
-      - iot_network
-
-  dispatcher:
-    build:
-      context: .
-      dockerfile: dispatcher/Dockerfile
-    environment:
-      - IOT_NATS_URL=nats://nats:4222
-      - IOT_DATABASE_URL=postgres://iot:sensor@db/sensor_db
-      - RUST_LOG=debug
-    depends_on:
-      - db
-      - nats
     networks:
       - iot_network
 
 volumes:
-  nats_data:
   pg_data:
   grafana_storage:
 

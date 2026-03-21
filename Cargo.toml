@@ -2,11 +2,8 @@
 resolver = "3"
 members = [
     "common",
-    "dispatcher",
-    "mqtt_worker",
-    "db",
-    "messaging",
-    "sensor_simulator"
+    "collector",
+    "mqtt_sim"
 ]
 
 [workspace.dependencies]

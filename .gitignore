@@ -11,3 +11,5 @@ mosquitto/log
 # secrets
 .env
 .envrc
+
+*.drawio.svg.bkp

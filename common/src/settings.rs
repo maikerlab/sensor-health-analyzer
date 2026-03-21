@@ -5,17 +5,11 @@ use serde::Deserialize;
 #[derive(Deserialize, Clone, Debug)]
 pub struct AppConfig {
     pub database: DatabaseSettings,
-    pub nats: NatsSettings,
     pub mqtt: MqttSettings,
 }
 
 #[derive(Deserialize, Clone, Debug)]
 pub struct DatabaseSettings {
-    pub url: String,
-}
-
-#[derive(Deserialize, Clone, Debug)]
-pub struct NatsSettings {
     pub url: String,
 }
 
@@ -30,11 +24,10 @@ impl AppConfig {
         let settings_file = File::new("settings.toml", Toml);
         let settings = Config::builder()
             .add_source(settings_file.required(false))
-            .add_source(config::Environment::with_prefix("IOT")
+            .add_source(config::Environment::with_prefix("SHA")
                 .try_parsing(true)
                 .separator("_"))
             .set_default("database.url", "postgres://iot:sensor@localhost/sensor_db").unwrap()
-            .set_default("nats.url", "nats://localhost:4222").unwrap()
             .set_default("mqtt.host", "localhost").unwrap()
             .set_default("mqtt.port", 1883).unwrap()
             .build()
