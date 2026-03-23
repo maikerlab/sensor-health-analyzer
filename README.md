@@ -26,7 +26,8 @@ Collects data from sensors, makes them available for visualization and detecting
 ```shell
 .
 ├── docs                # Documentation
-├── common              # Common data structures shared between services
+├── core                # Core data structures
+├── infra               # Traits + implementation of all interaction with external services, such as databases
 ├── collector           # Receives measurements from MQTT broker and saves them to database
 ├── mqtt_sim            # CLI application for testing - e.g. publish sensor measurements to the collector
 ├── mosquitto           # Config for the Mosquitto MQTT broker running in Docker
