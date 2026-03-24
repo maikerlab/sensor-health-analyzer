@@ -1,0 +1,20 @@
+syntax = "proto3";
+package evaluation;
+
+// The evaluation service definition.
+service EvaluationService {
+  // Evaluate a temperature reading
+  rpc EvalTemperature (EvaluationRequest) returns (EvaluationReply) {}
+}
+
+// The request message containing the temperature sensor to evaluate
+message EvaluationRequest {
+  string sensor_id = 1;
+  double temperature = 2;
+}
+
+// The response message containing the evaluation result
+message EvaluationReply {
+  uint32 health_score = 1;
+  bool is_anomaly = 2;
+}
