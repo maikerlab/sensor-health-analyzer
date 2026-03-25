@@ -3,7 +3,6 @@ members = [
     "core",
     "collector",
     "mqtt_sim",
-    "cli",
     "evaluator",
 ]
 default-members = ["core", "infra"]
