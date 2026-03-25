@@ -67,6 +67,27 @@ impl SensorDataRepository for PostgresDatabase {
         Ok(readings.into_iter().map(|r| r.into()).collect())
     }
 
+    async fn find_readings_by_sensor_id_since_minutes(
+        &self,
+        sensor_id: &str,
+        since_minutes: i32,
+    ) -> anyhow::Result<Vec<SensorData>> {
+        let readings: Vec<SensorDataPg> = sqlx::query_as(
+            r#"
+                SELECT * FROM sensor_data
+                JOIN sensors s ON s.id = sensor_id
+                WHERE s.id = $1
+                  AND time >= NOW() - make_interval(mins => $2)
+                ORDER BY time ASC
+            "#,
+        )
+        .bind(sensor_id)
+        .bind(since_minutes)
+        .fetch_all(&self.pool)
+        .await?;
+        Ok(readings.into_iter().map(|r| r.into()).collect())
+    }
+
     async fn save_sensor_reading(&self, reading: &CreateSensorData) -> anyhow::Result<SensorData> {
         let sensor_data: SensorDataPg = sqlx::query_as(
             r#"

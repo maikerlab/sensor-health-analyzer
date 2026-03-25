@@ -3,18 +3,21 @@ package evaluation;
 
 // The evaluation service definition.
 service EvaluationService {
-  // Evaluate a temperature reading
-  rpc EvalTemperature (EvaluationRequest) returns (EvaluationReply) {}
+  // Evaluate a temperature reading of a grill session
+  rpc EvalGrillSession (GrillEvalRequest) returns (GrillEvalResponse) {}
 }
 
-// The request message containing the temperature sensor to evaluate
-message EvaluationRequest {
+// The request message containing the data of the grill session to evaluate
+message GrillEvalRequest {
   string sensor_id = 1;
-  double temperature = 2;
+  int32 minutes_elapsed = 2;
+  float target_temp = 3;
+  float current_temp = 4;
 }
 
-// The response message containing the evaluation result
-message EvaluationReply {
-  uint32 health_score = 1;
-  bool is_anomaly = 2;
+// The response message containing the evaluation result for the grill session
+message GrillEvalResponse {
+  float minutes_remaining = 1;
+  float confidence = 2;
+  string message = 3;
 }

@@ -13,6 +13,7 @@ pub trait SensorRepository {
 
 pub trait SensorDataRepository {
     fn find_readings_by_sensor_id(&self, sensor_id: &str) -> impl Future<Output = anyhow::Result<Vec<SensorData>>> + Send;
+    fn find_readings_by_sensor_id_since_minutes(&self, sensor_id: &str, since_minutes: i32) -> impl Future<Output = anyhow::Result<Vec<SensorData>>> + Send;
     fn save_sensor_reading(&self, reading: &CreateSensorData) -> impl Future<Output = anyhow::Result<SensorData>> + Send;
 }
 

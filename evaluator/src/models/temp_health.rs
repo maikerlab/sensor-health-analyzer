@@ -1,9 +1,9 @@
-use ndarray::Array2;
 use ort::inputs;
 use ort::session::{Session, SessionOutputs, builder::GraphOptimizationLevel};
 use ort::value::TensorRef;
 use std::path::Path;
 use std::sync::Mutex;
+use ndarray::Array2;
 use tracing::{debug, info};
 
 /// Input features – order must match Python training exactly

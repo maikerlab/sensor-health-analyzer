@@ -1,0 +1,16 @@
+{
+  "feature_cols": [
+    "temperature",
+    "target_temp",
+    "temp_remaining",
+    "time_elapsed",
+    "avg_rate",
+    "recent_rate",
+    "rate_trend",
+    "progress_ratio"
+  ],
+  "target_col": "time_remaining",
+  "n_features": 8,
+  "training_mae": 14.80455413598896,
+  "training_r2": 0.21889778914652458
+}
