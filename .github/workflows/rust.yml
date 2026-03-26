@@ -9,6 +9,7 @@ on:
       - '.gitignore'
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
 
 env:
   CARGO_TERM_COLOR: always
@@ -18,7 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SQLX_OFFLINE: true
-
     steps:
       - uses: actions/checkout@v4
       - name: Install sqlx-cli
@@ -26,7 +26,7 @@ jobs:
       - name: Setup caching
         uses: Swatinem/rust-cache@v2
       - name: Build
-        run: cargo build --verbose
+        run: cargo build
       - name: Check sqlx queries
         run: cargo sqlx prepare --check --workspace
   test:
@@ -36,12 +36,12 @@ jobs:
       - name: Setup caching
         uses: Swatinem/rust-cache@v2
       - name: Run tests
-        run: cargo test --verbose
+        run: cargo test
       - name: Run clippy
         run: cargo clippy --all-targets --all-features
   docker:
     needs: [build, test]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     environment: prod
     steps:
