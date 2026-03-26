@@ -34,7 +34,7 @@ impl SensorRepository for PostgresDatabase {
         Ok(sensor.map(|s| s.into()))
     }
 
-    async fn save_sensor(&self, sensor: CreateSensor) -> anyhow::Result<Sensor> {
+    async fn save_sensor(&self, sensor: &CreateSensor) -> anyhow::Result<Sensor> {
         let sensor: SensorPg = sqlx::query_as(
             r#"
                 INSERT INTO sensors (id, channel, unit, description)
@@ -42,10 +42,10 @@ impl SensorRepository for PostgresDatabase {
                 RETURNING id, device_id, channel, unit, description, created_at
             "#,
         )
-        .bind(sensor.id)
-        .bind(sensor.channel)
-        .bind(sensor.unit)
-        .bind(sensor.description)
+        .bind(&sensor.id)
+        .bind(&sensor.channel)
+        .bind(&sensor.unit)
+        .bind(&sensor.description)
         .fetch_one(&self.pool)
         .await?;
         Ok(sensor.into())

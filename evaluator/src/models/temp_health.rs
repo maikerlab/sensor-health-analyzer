@@ -1,3 +1,4 @@
+#![allow(unused)]
 use ort::inputs;
 use ort::session::{Session, SessionOutputs, builder::GraphOptimizationLevel};
 use ort::value::TensorRef;

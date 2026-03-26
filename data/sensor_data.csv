@@ -1,0 +1,7 @@
+timestamp;sensor_id;channel;unit;value
+2026-03-26T05:00:00Z;sensors/temperature/77;temperature;°C;60.2
+2026-03-26T05:00:15Z;sensors/temperature/77;temperature;°C;62.4
+2026-03-26T05:00:30Z;sensors/temperature/77;temperature;°C;64.1
+2026-03-26T05:00:45Z;sensors/temperature/77;temperature;°C;65.8
+2026-03-26T05:01:00Z;sensors/temperature/77;temperature;°C;67.0
+2026-03-26T06:17:28Z;sensors/temperature/77;temperature;°C;68.9

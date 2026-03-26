@@ -1,13 +1,12 @@
 [package]
-name = "mqtt_sim"
+name = "sensorvault-mqtt_sim"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-clap = { version = "4.5.45", features = ["derive"] }
-rumqttc = "0.24.0"
 anyhow.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
-sensorvault-core = { path = "../core" }
+clap = { version = "4.5.45", features = ["derive"] }
+rumqttc = "0.25.1"
 rand = "0.10.0"

@@ -4,6 +4,7 @@ members = [
     "collector",
     "mqtt_sim",
     "evaluator",
+    "cli"
 ]
 default-members = ["core", "infra"]
 resolver = "3"

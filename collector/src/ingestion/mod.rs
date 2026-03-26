@@ -4,10 +4,10 @@ mod input;
 use crate::ingestion::decoder::{DecodedSensorReading, DecoderRegistry};
 use crate::ingestion::input::RawInput;
 use chrono::Utc;
-use infra::persistence::{SensorDataRepository, SensorRepository};
 use rumqttc::Packet::Publish;
 use rumqttc::{AsyncClient, Event, MqttOptions, QoS};
 use sensorvault_core::models::{CreateSensor, CreateSensorData, Sensor};
+use sensorvault_infra::persistence::{SensorDataRepository, SensorRepository};
 use std::time::Duration;
 use tracing::{debug, info, warn};
 
@@ -110,14 +110,13 @@ where
         if let Some(sensor) = self.db.find_sensor_by_id(reading.id.as_str()).await? {
             return Ok(sensor);
         }
-        self.db
-            .save_sensor(CreateSensor {
-                id: reading.id.clone(),
-                channel: reading.channel.clone(),
-                unit: reading.unit.clone(),
-                description: None,
-            })
-            .await
+        let create_sensor = CreateSensor {
+            id: reading.id.clone(),
+            channel: reading.channel.clone(),
+            unit: reading.unit.clone(),
+            description: None,
+        };
+        self.db.save_sensor(&create_sensor).await
     }
 }
 

@@ -8,7 +8,7 @@ mod models;
 
 pub trait SensorRepository {
     fn find_sensor_by_id(&self, topic: &str) -> impl Future<Output = anyhow::Result<Option<Sensor>>> + Send;
-    fn save_sensor(&self, sensor: CreateSensor) -> impl Future<Output = anyhow::Result<Sensor>> + Send;
+    fn save_sensor(&self, sensor: &CreateSensor) -> impl Future<Output = anyhow::Result<Sensor>> + Send;
 }
 
 pub trait SensorDataRepository {

@@ -1,16 +1,16 @@
 [package]
-name = "collector"
+name = "sensorvault-collector"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-tokio = { workspace = true }
-chrono = "0.4"
-rumqttc = "0.25.1"
-sensorvault-core = { path = "../core" }
-infra = { path = "../infra" }
+tokio.workspace = true
 anyhow.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
+sensorvault-core = { path = "../core" }
+sensorvault-infra = { path = "../infra" }
+chrono = "0.4"
+rumqttc = "0.25.1"
 serde = { version = "1.0.228", features = ["derive"] }
 config = "0.15.22"
